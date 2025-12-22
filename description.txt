@@ -1,0 +1,65 @@
+WHAT IS THE REAL PROBLEM?
+
+Problem statement (engineering view): “Continuously deliver market events from a producer to multiple consumers with minimal latency, predictable behavior, and deterministic replay, under failure and load.”
+
+
+WHAT DOES A REAL MARKET DATA SYSTEM NEED?
+
+Think in capabilities, not features.
+
+A. Functional Requirements
+
+Generate market events (ticks)
+
+Deliver them to consumers
+
+Preserve order
+
+Detect missing data
+
+Allow replay
+
+Support multiple consumers
+
+B. Non-Functional Requirements (More Important)
+
+Low latency (tail latency matters)
+
+Predictable performance
+
+Deterministic behavior
+
+No GC pauses (Rust helps)
+
+Bounded memory usage
+
+Failure visibility
+
+C. Constraints (These Shape Everything)
+
+Fixed-size messages
+
+No allocations in hot path
+
+Single-writer where possible
+
+Explicit backpressure
+
+No implicit buffering
+
+Clock behavior must be controlled
+
+WHAT KIND OF SYSTEM IS THIS?
+
+Exchange market data feed
+
+Internal feed handler at trading firms
+
+| Aspect    | Design Choice                               |
+| --------- | ------------------------------------------- |
+| Latency   | Prefer predictability over throughput       |
+| Ordering  | Strict                                      |
+| Delivery  | Best-effort or reliable (decide explicitly) |
+| Recovery  | Replay, not magic                           |
+| Consumers | Slow consumers must not affect fast ones    |
+
